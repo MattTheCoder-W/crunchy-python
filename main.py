@@ -3,5 +3,4 @@ from classes.generate import Generator
 
 if __name__ == "__main__":
     args = Arguments().getargs()
-    print(args)
     Generator(args)

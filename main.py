@@ -98,7 +98,6 @@ def estimate(lens, chars):
     all_size = 0
     for k in lens:
         cur_len = len(chars) ** k
-        # cur_len = int(math.factorial(len(chars) + k - 1) / (math.factorial(k) * math.factorial(len(chars) - 1)))
         all_len += cur_len
         all_size += cur_len * (k + 2)
     all_size -= 2
@@ -125,8 +124,6 @@ def generate(gen_lens, all_lens, gen_chars):
     print(colored(">>> ", "green") + "Generating started!")
     for i in gen_lens:
         try:
-            # print(list(map("".join, itertools.product('ort', repeat=4))))
-            # list(itertools.combinations_with_replacement(gen_chars, i))
             for index, combination in enumerate(list(map("".join, itertools.product(gen_chars, repeat=i)))):
                 gen_wordlist.append(combination)
                 if index % 1000000 == 0:
@@ -164,11 +161,11 @@ def interactive():
     # Main Interactive Program Script
     try:
         print_banner()
-        min, max, chars = get_data()
+        minlen, maxlen, chars = get_data()
 
-        lens = list(range(min, max + 1))
+        lens = list(range(minlen, maxlen + 1))
         all_len = estimate(lens, chars)
-        notSaving, filenm = dosave()
+        notsaving, filenm = dosave()
         wordlist = generate(lens, all_len, chars)
 
         size = calculate_size(wordlist)
@@ -177,7 +174,7 @@ def interactive():
               f"(Actual) File will have {size} " + colored("bytes", "green") +
               f" -> {round(size / 1000, 2)} " + colored("KB", "yellow") +
               f" -> {int(size / 1000000)} " + colored("MB", "red") + "!")
-        save(notSaving, filenm, wordlist)
+        save(notsaving, filenm, wordlist)
     except KeyboardInterrupt:
         print('\n' + colored(">>> ", "red") + "Stopping")
         exit()
@@ -186,15 +183,15 @@ def interactive():
 def standard():
     # Main Program Script
     try:
-        min, max, chars = [int(in_args['minimum-length']), int(in_args['maximum-length']), in_args['chars']]
+        minlen, maxlen, chars = [int(in_args['minimum-length']), int(in_args['maximum-length']), in_args['chars']]
 
-        lens = list(range(min, max + 1))
+        lens = list(range(minlen, maxlen + 1))
         all_len = estimate(lens, chars)
         if in_args['output'] is not None:
-            notSaving = False
+            notsaving = False
             filenm = in_args['output']
         else:
-            notSaving = True
+            notsaving = True
             filenm = ""
         wordlist = generate(lens, all_len, chars)
 
@@ -204,7 +201,7 @@ def standard():
               f"(Actual) File will have {size} " + colored("bytes", "green") +
               f" -> {round(size / 1000, 2)} " + colored("KB", "yellow") +
               f" -> {int(size / 1000000)} " + colored("MB", "red") + "!")
-        save(notSaving, filenm, wordlist)
+        save(notsaving, filenm, wordlist)
     except KeyboardInterrupt:
         print('\n' + colored(">>> ", "red") + "Stopping")
         exit()

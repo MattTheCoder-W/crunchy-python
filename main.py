@@ -6,7 +6,7 @@ from random import choice
 import argparse
 os.system("cls")
 
-in_args = []
+in_args = {"interactive": False}
 try:
     if sys.argv[1] != "-i":
         ap = argparse.ArgumentParser()
@@ -17,6 +17,8 @@ try:
         ap.add_argument('-o', '--output', type=str, help="Output file (if needed)")
         ap.add_argument('-i', '--interactive', action="store_true", help="Interactive mode of this script")
         in_args = vars(ap.parse_args())
+    else:
+        in_args['interactive'] = True
 except IndexError:
     print("Usage: python crunchy.py <min-length> <max-length> <chars> [-o] [-i]")
     exit()
@@ -95,9 +97,11 @@ def estimate(lens, chars):
     all_len = 0
     all_size = 0
     for k in lens:
-        cur_len = int((math.factorial(len(chars) + k - 1) / (math.factorial(k) * math.factorial(len(chars) - 1))) * 2)
+        cur_len = len(chars) ** k
+        # cur_len = int(math.factorial(len(chars) + k - 1) / (math.factorial(k) * math.factorial(len(chars) - 1)))
         all_len += cur_len
         all_size += cur_len * (k + 2)
+    all_size -= 2
 
     print(colored(">>> ",
                   "yellow") + f"Wordlist will have {all_len} words, which is about {all_size} bytes ({round(all_size / 1000000, 4)} MB)!")
@@ -118,16 +122,15 @@ def dosave():
 
 def generate(gen_lens, all_lens, gen_chars):
     gen_wordlist = []
+    print(colored(">>> ", "green") + "Generating started!")
     for i in gen_lens:
         try:
-            print(colored(">>> ", "green") + "Generating started!")
-            for index, combination in enumerate(list(itertools.combinations_with_replacement(gen_chars, i))):
-                combination = list(combination)
-                gen_wordlist.append(''.join(combination))
-                if combination[::-1] != combination:
-                    gen_wordlist.append(''.join(combination[::-1]))
+            # print(list(map("".join, itertools.product('ort', repeat=4))))
+            # list(itertools.combinations_with_replacement(gen_chars, i))
+            for index, combination in enumerate(list(map("".join, itertools.product(gen_chars, repeat=i)))):
+                gen_wordlist.append(combination)
                 if index % 1000000 == 0:
-                    print(f"{round(index / all_lens * 200, 2)}%              ", end="\r")
+                    print(f"{round(index / all_lens * 100, 2)}%              ", end="\r")
                 if len(gen_wordlist) > 500000000:
                     print("\n" + colored(">>> ", "red") + "Reached memory limit!!! Stopping!")
                     gen_wordlist = []

@@ -3,8 +3,8 @@ from random import choice
 from classes.message import message
 
 QUOTES = ['Why are you beating me so hard?', "i don't have infinite memory...",
-                  "Please, nothing longer that 500*10^6",
-                  "Hi, friend!", "Hello?", "Matt had created me!", "I see you (눈_눈)"]
+          "Please, nothing longer that 500*10^6",
+          "Hi, friend!", "Hello?", "Matt had created me!", "I see you (눈_눈)"]
 WIDTH = get_terminal_size()[0]
 SMALL = "abcdefghijklmnopqrstuvwxyz"
 BIG = SMALL.upper()
@@ -13,11 +13,22 @@ DIGITS = "0123456789"
 
 class Interactive:
     def __init__(self):
-        self.showbanner(quiet=True)
+        self.showbanner()
         self.args = self.getdata()
 
     def getargs(self):
         return self.args
+
+    @staticmethod
+    def dosave():
+        message("File to save wordlist in(Empty for not saving): ", "question", end="")
+        filenm = str(input())
+        if filenm == "":
+            notsaving = True
+            message("Not saving mode ON!", "info")
+        else:
+            notsaving = False
+        return {"output": filenm, "notsaving": notsaving}
 
     @staticmethod
     def getdata():
@@ -39,14 +50,7 @@ class Interactive:
                 else:
                     in_chars = in_chars.replace('<a>', SMALL).replace("<A>", BIG).replace("<0>", DIGITS)
                     break
-            message("File to save wordlist in(Empty for not saving): ", "question", end="")
-            filenm = str(input())
-            if filenm == "":
-                notsaving = True
-                message("Not saving mode ON!", "info")
-            else:
-                notsaving = False
-            return {"min": in_min, "max": in_max, "chars": in_chars, "output": filenm, 'notsaving': notsaving}
+            return {"min": in_min, "max": in_max, "chars": in_chars}
         except KeyboardInterrupt:
             message("Stopping", "warning", prefix="\n")
             exit()

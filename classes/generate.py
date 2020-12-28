@@ -9,8 +9,6 @@ class Generator:
         self.args = args
         self.lens = list(range(int(self.args['min']), int(self.args['max']) + 1))
         self.data = self.getsize()
-        message(f"Wordlist will have {self.data['len']} words, which is about {self.data['size']} bytes" +
-                f"({round(self.data['size'] / 1000, 3)}KB)!", "info")
         self.wordlist = self.generate()
         self.getactualsize()
         if not self.args['notsaving']:

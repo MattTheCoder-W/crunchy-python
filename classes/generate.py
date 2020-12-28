@@ -51,6 +51,8 @@ class Generator:
                 message("Reached memory limit!!! Stopping!", "error", prefix="\n")
                 wordlist = []
                 exit()
+        prg.next(cur_perc=1)
+        print()
         message("Wordlist generated!", "success")
         return wordlist
 

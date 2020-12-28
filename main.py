@@ -1,7 +1,6 @@
 import itertools
 import os
 import sys
-import math
 from random import choice
 import argparse
 os.system("cls")

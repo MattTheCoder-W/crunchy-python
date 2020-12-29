@@ -40,6 +40,10 @@ class Generator:
         message("Generating started!", "info")
         index = 0
         prg = Progress(tabs=int(get_terminal_size()[0]/2), spc="-")
+        if self.data['len'] > 500000000:
+            message("Sorry, this script can generate wordlists only to 500 000 000 words... " +
+                    "This issue will be fixed soon", "error")
+            exit()
         for i in self.lens:
             try:
                 for combination in list(map("".join, itertools.product(self.args['chars'], repeat=i))):
